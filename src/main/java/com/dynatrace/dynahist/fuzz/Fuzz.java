@@ -55,20 +55,24 @@ public class Fuzz {
 				// read dynamic histogram from a java.io.DataInput
 				Histogram.readAsDynamic(layout, new DataInputStream(new ByteArrayInputStream(bytes.toByteArray())));
 			} catch (IOException e) {
-				// expected
+				// expected here
 			}
-		} catch (IllegalArgumentException e) {
-			// expected
+		} catch (IllegalArgumentException | ArithmeticException e) {
+			// expected here
 		}
 	}
 
 	private static ValueEstimator getEstimator(FuzzedDataProvider data) {
 		int i = data.consumeInt(0, 3);
-		return switch (i) {
-			case 0 -> ValueEstimator.LOWER_BOUND;
-			case 1 -> ValueEstimator.MID_POINT;
-			case 2 -> ValueEstimator.UPPER_BOUND;
-			default -> ValueEstimator.UNIFORM;
-		};
+		switch (i) {
+			case 0:
+				return ValueEstimator.LOWER_BOUND;
+			case 1:
+				return ValueEstimator.MID_POINT;
+			case 2:
+				return ValueEstimator.UPPER_BOUND;
+			default:
+				return ValueEstimator.UNIFORM;
+		}
 	}
 }
