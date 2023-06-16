@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-	implementation 'com.dynatrace.dynahist:dynahist:1.3'
+	implementation 'com.dynatrace.dynahist:dynahist:1.4'
 
 	implementation 'org.mockito:mockito-core:5.3.1'
 	implementation 'com.code-intelligence:jazzer-api:0.17.1'
