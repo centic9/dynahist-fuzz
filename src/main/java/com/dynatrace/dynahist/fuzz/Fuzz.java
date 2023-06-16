@@ -4,7 +4,10 @@ package com.dynatrace.dynahist.fuzz;
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 import com.dynatrace.dynahist.Histogram;
 import com.dynatrace.dynahist.layout.Layout;
+import com.dynatrace.dynahist.layout.LogLinearLayout;
+import com.dynatrace.dynahist.layout.LogOptimalLayout;
 import com.dynatrace.dynahist.layout.LogQuadraticLayout;
+import com.dynatrace.dynahist.layout.OpenTelemetryExponentialBucketsLayout;
 import com.dynatrace.dynahist.value.ValueEstimator;
 
 import java.io.*;
@@ -19,7 +22,25 @@ public class Fuzz {
 	public static void fuzzerTestOneInput(FuzzedDataProvider data) {
 		try {
 			// Defining a bin layout
-			Layout layout = LogQuadraticLayout.create(data.consumeDouble(), data.consumeDouble(), data.consumeDouble(), data.consumeDouble());
+			int select = data.consumeInt(0, 3);
+
+			final Layout layout;
+			switch (select) {
+				case 0:
+					layout = LogQuadraticLayout.create(data.consumeDouble(), data.consumeDouble(), data.consumeDouble(), data.consumeDouble());
+					break;
+				case 1:
+					layout = LogLinearLayout.create(data.consumeDouble(), data.consumeDouble(), data.consumeDouble(), data.consumeDouble());
+					break;
+				case 2:
+					layout = OpenTelemetryExponentialBucketsLayout.create(data.consumeInt());
+					break;
+				case 3:
+					layout = LogOptimalLayout.create(data.consumeDouble(), data.consumeDouble(), data.consumeDouble(), data.consumeDouble());
+					break;
+				default:
+					throw new IllegalStateException("Unexpected value: " + select);
+			}
 
 			// Creating a dynamic histogram
 			Histogram histogram = Histogram.createDynamic(layout);
