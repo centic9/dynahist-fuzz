@@ -9,6 +9,7 @@ repositories {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/com.dynatrace.dynahist/dynahist
 	implementation 'com.dynatrace.dynahist:dynahist:1.4'
 
 	implementation 'org.mockito:mockito-core:5.11.0'
